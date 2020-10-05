@@ -1,25 +1,13 @@
-; Ñèìîíîâè÷ Èâàí ÁÏÈ193
-; Âàðèàíò 19
-; Íîâûé ìàññèâ ñ çàìåíîé íóëåâûõ ýëåìåíòîâ, ïðåäøåñòâóþùèõ ïåðâîìó îòðèöàòåëüíîìó, åäèíèöåé
-;
-;     Ðàçðàáîòàòü ïðîãðàììó, êîòîðàÿ ââîäèò îäíîìåðíûé ìàññèâ A[N], ôîðìèðóåò èç ýëåìåíòîâ ìàññèâà A íîâûé ìàññèâ B,
-;ñîñòîÿùèé èç èíäåêñîâ ïîëîæèòåëüíûõ ýëåìåíòîâ A, è âûâîäèò åãî. Ïàìÿòü ïîä ìàññèâû ìîæåò âûäåëÿòüñÿ êàê ñòàòè÷åñêè, òàê è äèíàìè÷åñêè ïî âûáîðó ðàçðàáîò÷èêà.
-;Ðàçáèòü ðåøåíèå çàäà÷è íà ôóíêöèè ñëåäóþùèì îáðàçîì:
-;        Ââîä è âûâîä ìàññèâîâ îôîðìèòü êàê ïîäïðîãðàììû.
-;        Ôîðìèðîâàíèå ìàññèâà B îôîðìèòü êàê ïðîöåäóðó
-;        Îðãàíèçîâàòü âûâîä êàê èñõîäíîãî, òàê è ñôîðìèðîâàííîãî ìàññèâîâ
-;Óêàçàííûå ïðîöåäóðû ìîãóò èñïîëüçîâàòü äàííûå íàïðÿìóþ (èìèòàöèÿ ïðîöåäóð áåç ïàðàìåòðîâ). Èìèòàöèÿ ðàáîòû ñ ïàðàìåòðàìè òàêæå äîïóñòèìà.
-;
 ; Симонович Иван БПИ193
 ; Вариант 19
 ; Новый массив с заменой нулевых элементов, предшествующих первому отрицательному, единицей
 ;
-; Разработать программу, которая вводит одномерный массив A[N], формирует из элементов массива A новый массив B,
+;     Разработать программу, которая вводит одномерный массив A[N], формирует из элементов массива A новый массив B,
 ;состоящий из индексов положительных элементов A, и выводит его. Память под массивы может выделяться как статически, так и динамически по выбору разработчика.
 ;Разбить решение задачи на функции следующим образом:
-; Ввод и вывод массивов оформить как подпрограммы.
-; Формирование массива B оформить как процедуру
-; Организовать вывод как исходного, так и сформированного массивов
+;        Ввод и вывод массивов оформить как подпрограммы.
+;        Формирование массива B оформить как процедуру
+;        Организовать вывод как исходного, так и сформированного массивов
 ;Указанные процедуры могут использовать данные напрямую (имитация процедур без параметров). Имитация работы с параметрами также допустима.
 ;
 
@@ -28,10 +16,14 @@ entry start
 
 include 'win32a.inc'
 
+MAX_ARRAY_SIZE =100
+
 section '.data' data readable writable
         msgArraySizeInput   db 'Enter array size: ', 0
         msgBadArraySize     db 'Incorrect size of vector = %d', 10, 0
         msgArrayEntered     db 10,'Your array:', 10, 0
+        msgArrayNoChanges   db 10,'No numbers can be replaced.', 10, 0
+        msgFirstNegative    db 10,'First negative number index: %d', 10, 0
         msgArrayProcessed   db 10,'Result array:', 10, 0
         msgNumberEntered    db '[%d] = %d', 10, 0
         strOutputInt        db '%d', 10, 0
@@ -41,202 +33,173 @@ section '.data' data readable writable
         i        dd ?
         tmp      dd ?
 
-        array    rd 100
+        array    rd MAX_ARRAY_SIZE
 
 section '.code' code readable executable
 
 start:
-        push msgArraySizeInput
-        call [printf]
+    push msgArraySizeInput
+    call [printf]
+    add  esp, 4 * 1
 
-        push size
-        push strScanInt
-        call [scanf]
+    push size
+    push strScanInt
+    call [scanf]
+    add  esp, 4 * 2
 
-        cmp [size], 1
-        jge goodArraySizeEntered
+    cmp  [size], 0
+    jle  @f
+    cmp  [size], MAX_ARRAY_SIZE
+    jle  readInitialArray 
+    
+    @@:
         push [size]
         push msgBadArraySize
         call [printf]
-        jmp finish
+        add  esp, 4 * 2
+    
+        jmp  exit
 
-goodArraySizeEntered:
-        mov  [i], 0
-
-loop1:
+readInitialArray:
+    mov  [i], 0
+    @@:
+        inc  [i]
+    
         push tmp
         push strScanInt
         call [scanf]
+        add  esp, 4 * 2
 
-        inc [i]
-
-        push esp
         push [tmp]
         push [i]
         push msgNumberEntered
         call [printf]
+        add  esp, 4 * 3
+    
+        mov  eax, [i]
+        mov  ebx, 4
+        mul  ebx
+        mov  ebx, array
+        add  eax, ebx
+        mov  ebx, [tmp]
+        mov  [eax], ebx
+    
+        mov  eax, [i]
+        mov  edx, [size]
+        cmp  eax, edx
+    
+        jne  @b
 
-        mov eax, [i]
-        mov ebx, 4
-        mul ebx
-        mov ebx, array
-        add eax, ebx
-        mov ebx, [tmp]
-        mov [eax], ebx
+printInitialArray:
+    push msgArrayEntered
+    call [printf]
+    add  esp, 4 * 1
+    
+    call printArray
 
-        mov eax, [i]
-        mov edx, [size]
-        cmp eax, edx
+processArray:
+    call replaceZeros
 
-        jne loop1
+printProcessedArray:
+    push msgArrayProcessed
+    call [printf]
+    add  esp, 4 * 1
+    
+    call printArray
 
-arrayEntered:
-        push msgArrayEntered
-        call [printf]
+exit:
+    call [getch]
+    push 0
 
-        mov  [i], 0
-        loop2:
-                inc [i]
-
-                mov eax, [i]
-                mov ebx, 4
-                mul ebx
-                mov ebx, array
-                add eax, ebx ; àäðåñ íóæíîãî ÷èñëà â eax
-                mov eax, [eax]
-                mov [tmp], eax
-
-                push [tmp]
-                push [i]
-                push msgNumberEntered
-                mov eax, 0
-                call [printf]
-
-                mov eax, [i]
-                mov edx, [size]
-                cmp eax, edx
-        jne loop2
-
-        mov  [i], 0
-        loop3:
-                inc [i]
-
-                mov eax, [i]
-                mov ebx, 4
-                mul ebx
-                mov ebx, array
-                add eax, ebx ; àäðåñ íóæíîãî ÷èñëà â eax
-
-                cmp [eax], dword 0
-                jne loop3skip
-                mov [eax], dword 1
-                loop3skip:
-                jl loop3exit
-                mov eax, [i]
-                mov edx, [size]
-                cmp eax, edx
-        jne loop3
-        loop3exit:
-
-        push msgArrayProcessed
-        call [printf]
-
-        mov  [i], 0
-
-        loop4:
-                inc [i]
-
-                mov eax, [i]
-                mov ebx, 4
-                mul ebx
-                mov ebx, array
-                add eax, ebx ; àäðåñ íóæíîãî ÷èñëà â eax
-                mov eax, [eax]
-                mov [tmp], eax
-
-                push [tmp]
-                push [i]
-                push msgNumberEntered
-                mov eax, 0
-                call [printf]
-
-                mov eax, [i]
-                mov edx, [size]
-                cmp eax, edx
-        jne loop4
-
-        jmp finish
+    call [ExitProcess]
 
 printArray:
-        mov  [i], 0
-        printLoop:
-                inc [i]
+    mov  [i], 0
+    @@:
+        inc  [i]
 
-                mov eax, [i]
-                mov ebx, 4
-                mul ebx
-                mov ebx, array
-                add eax, ebx ; àäðåñ íóæíîãî ÷èñëà â eax
-                mov eax, [eax]
-                mov [tmp], eax
+        mov  eax, [i]
+        mov  ebx, 4
+        mul  ebx
+        mov  ebx, array
+        add  eax, ebx ; адрес нужного числа в eax
+        mov  eax, [eax]
+        mov  [tmp], eax
 
-                push [tmp]
-                push [i]
-                push msgNumberEntered
-                mov eax, 0
-                call [printf]
+        push [tmp]
+        push [i]
+        push msgNumberEntered
+        call [printf]
+        add  esp, 4 * 3
 
-                mov eax, [i]
-                mov edx, [size]
-                cmp eax, edx
+        mov  eax, [i]
+        mov  edx, [size]
+        cmp  eax, edx
 
-        jne printLoop
-        ret
+        jne  @b
+    ret
 
 replaceZeros:
-        mov  [i], 0
-        replaceZerosLoop:
-                inc [i]
+    cmp  [size], 1
+    je   _noChanges
+    
+    mov  [i], 0
+    @@:
+        inc  [i]
+        mov  ecx, [i]
 
-                mov eax, [i]
-                mov ebx, 4
-                mul ebx
-                mov ebx, array
-                add eax, ebx ; àäðåñ íóæíîãî ÷èñëà â eax
+        mov  eax, [i]
+        mov  ebx, 4
+        mul  ebx
+        mov  ebx, array
+        add  eax, ebx
 
-                cmp [eax], dword 0
-                jne notEqualToZero
-                mov [eax], dword 1
-                notEqualToZero:
-                jl replaceZerosExit
-                mov eax, [i]
-                mov edx, [size]
-                cmp eax, edx
-        jne replaceZerosLoop
-        replaceZerosExit:
-        ret
+        cmp  [eax], dword 0
+        jl   @f
 
-finish:
-        call [getch]
+        mov  eax, [i]
+        mov  edx, [size]
+        cmp  eax, edx
+        jne  @b
 
-        push 0
-        call [ExitProcess]
+    _noChanges:
+    push msgArrayNoChanges
+    call [printf]
+    add  esp, 4 * 1
+    ret
+    
+    @@:
+    cmp  [i], 1
+    je   _noChanges
+    
+    push [i]
+    push msgFirstNegative
+    call [printf]
+    add  esp, 4 * 2
+    
+    @@:
+        dec [i]
+        mov  eax, [i]
+        mov  ebx, 4
+        mul  ebx
+        mov  ebx, array
+        add  eax, ebx
 
-;-------------------------------third act - including HeapApi--------------------------
-                                                 
-section '.idata' import data readable
-    library kernel, 'kernel32.dll',\
-            msvcrt, 'msvcrt.dll',\
-            user32,'USER32.DLL'
-
-include 'api\user32.inc'
-include 'api\kernel32.inc'
-    import kernel,\
-           ExitProcess, 'ExitProcess',\
-           HeapCreate,'HeapCreate',\
-           HeapAlloc,'HeapAlloc'
-  include 'api\kernel32.inc'
-    import msvcrt,\
-           printf, 'printf',\
-           scanf, 'scanf',\
-           getch, '_getch'
+        cmp  [eax], dword 0
+        jne  _afterReplacement
+        mov  [eax], dword 1
+        
+        _afterReplacement:
+        mov  eax, [i]
+        mov  edx, 0
+        cmp  eax, edx
+        jne  @b
+    ret
+    
+section '.idata' data readable import
+        library kernel32, 'kernel32.dll', \
+                msvcrt,   'msvcrt.dll'
+        import kernel32, ExitProcess, 'ExitProcess'
+        import msvcrt, printf, 'printf', \
+                       scanf,  'scanf',\
+                       getch, '_getch'
