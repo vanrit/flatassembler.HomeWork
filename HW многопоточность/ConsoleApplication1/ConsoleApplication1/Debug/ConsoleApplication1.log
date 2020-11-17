@@ -1,0 +1,8 @@
+﻿  ConsoleApplication1.cpp
+D:\Проги контест c#\Клиент-Сервер\ConsoleApplication1\ConsoleApplication1\ConsoleApplication1.cpp(75,13): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+D:\Проги контест c#\Клиент-Сервер\ConsoleApplication1\ConsoleApplication1\ConsoleApplication1.cpp(128,13): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+D:\Проги контест c#\Клиент-Сервер\ConsoleApplication1\ConsoleApplication1\ConsoleApplication1.cpp(184,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+D:\Проги контест c#\Клиент-Сервер\ConsoleApplication1\ConsoleApplication1\ConsoleApplication1.cpp(214,23): warning C4018: <: несоответствие типов со знаком и без знака
+D:\Проги контест c#\Клиент-Сервер\ConsoleApplication1\ConsoleApplication1\ConsoleApplication1.cpp(222,20): warning C4018: <: несоответствие типов со знаком и без знака
+D:\Проги контест c#\Клиент-Сервер\ConsoleApplication1\ConsoleApplication1\ConsoleApplication1.cpp(229,20): warning C4018: <: несоответствие типов со знаком и без знака
+  ConsoleApplication1.vcxproj -> D:\Проги контест c#\Клиент-Сервер\ConsoleApplication1\Debug\ConsoleApplication1.exe
