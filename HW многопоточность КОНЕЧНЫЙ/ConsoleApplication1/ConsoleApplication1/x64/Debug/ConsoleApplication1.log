@@ -1,5 +1,5 @@
 ﻿  ConsoleApplication1.cpp
-D:\Проги контест c#\Клиент-Сервер\ConsoleApplication1\ConsoleApplication1\ConsoleApplication1.cpp(113,13): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-D:\Проги контест c#\Клиент-Сервер\ConsoleApplication1\ConsoleApplication1\ConsoleApplication1.cpp(146,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-D:\Проги контест c#\Клиент-Сервер\ConsoleApplication1\ConsoleApplication1\ConsoleApplication1.cpp(189,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-  ConsoleApplication1.vcxproj -> D:\Проги контест c#\Клиент-Сервер\ConsoleApplication1\x64\Debug\ConsoleApplication1.exe
+C:\Users\user\Desktop\HW многопоточность КОНЕЧНЫЙ\ConsoleApplication1\ConsoleApplication1\ConsoleApplication1.cpp(113,13): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+C:\Users\user\Desktop\HW многопоточность КОНЕЧНЫЙ\ConsoleApplication1\ConsoleApplication1\ConsoleApplication1.cpp(148,32): warning C4267: аргумент: преобразование из "size_t" в "unsigned int"; возможна потеря данных
+C:\Users\user\Desktop\HW многопоточность КОНЕЧНЫЙ\ConsoleApplication1\ConsoleApplication1\ConsoleApplication1.cpp(193,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  ConsoleApplication1.vcxproj -> C:\Users\user\Desktop\HW многопоточность КОНЕЧНЫЙ\ConsoleApplication1\x64\Debug\ConsoleApplication1.exe

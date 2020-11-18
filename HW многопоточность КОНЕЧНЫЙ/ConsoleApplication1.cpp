@@ -60,9 +60,9 @@ public:
 	}
 	
 	/// <summary>
-	/// Отправка сообщений клиентами на сервер
+	/// Отправка сообщений клиентом на сервер
 	/// </summary>
-	/// <param name="letter"></param>
+	/// <param name="letter">письмо клиента</param>
 	void enqueueRequest(Valentine* letter)
 	{
 		mu.lock();
@@ -92,7 +92,7 @@ public:
 		int letterIndex = -2;
 		for (int i = 0; i < letters.size(); i++)
 		{
-			//Находим индекс введеного письма
+			//Находим индекс введеного письма из поступивших
 			if (letters[i] == letter)
 			{
 				letterIndex = i;
@@ -112,7 +112,8 @@ public:
 	{
 		srand(time(NULL));
 		printf("[SERVER] Начался новый день. Жду, пока утро закончится.\n");
-		//Задержка перед отправкой
+
+		//Задержка перед отправкой данных на сервер клиента
 		this_thread::sleep_for(chrono::milliseconds(3000));
 
 		//Блокируем поток мютексом
@@ -136,29 +137,33 @@ private:
 };
 
 /// <summary>
-/// Логика работы каждого клиента, запускается для каждого в отдельном потоке
+/// Логика работы каждого клиента, запускается для каждого клиента в отдельном потоке
 /// </summary>
 /// <param name="roomNumber"></param>
 /// <param name="text"></param>
 /// <param name="server"></param>
 void clientMain(int roomNumber, string text, Server* server)
 {
-	srand(time(NULL));
+	//Обновляем радном, чтобы для каждого потока был свой
+	srand(roomNumber+text.length());
 	printf("[CLIENT №%d] Начинаю писать письмо...\n", roomNumber);
 	//Создаем письмо клиента
 	Valentine letter(text, roomNumber);
 
+
+	//int sleepRand = rand() % 1000;
+	//printf("%d\n",sleepRand);
 	//Тратит время на написание письма
-	this_thread::sleep_for(chrono::milliseconds(100+rand() % 1000));
-	server->enqueueRequest(&letter);
+	this_thread::sleep_for(chrono::milliseconds(rand() % 1000));
+	server->enqueueRequest(&letter);//Клиент отправляет валентинку на сервер 
 	printf("[CLIENT №%d] Отправил письмо \"%s\", жду ответа!\n", roomNumber, text.c_str());
 
 	//Активное ожидание, пока сервер не определил победителя поток будет ожидать
 	while (!server->isResponseReady())
 		this_thread::sleep_for(chrono::milliseconds(5));
-	//Получаем ответ с сервера по нашему письму
+	//Получаем ответ с сервера по нашей валентинке, является ли клиент победителем
 	bool response = server->getResponse(&letter);
-	//Выводим ответ
+	//Выводим ответ в клиенте
 	if (response)
 		printf("[CLIENT №%d] \tПолучил ответ.\tСчастливчик, сегодня тебя выбрали!\n", roomNumber);
 	else
@@ -171,8 +176,7 @@ void clientMain(int roomNumber, string text, Server* server)
 /// <returns></returns>
 int EnterCheck()
 {
-
-	unsigned  int a;
+	int a;
 	while (!(cin >> a) || (cin.peek() != '\n'))
 	{
 		cin.clear();
@@ -192,9 +196,9 @@ int main()
 	cout << "Оформите ввод количества валентинок:" << endl;
 	int n=EnterCheck();
 
-	while (n <= 0)
+	while (n <= 0 || n>10000)
 	{
-		printf( "Введено отрицательное число или ноль\n");
+		printf( "Введено отрицательное число, ноль или число >10000\n");
 		printf( "Повторите ввод\n");
 		n = EnterCheck();
 	}
@@ -216,7 +220,7 @@ int main()
 	thread** clientThreads = new thread * [n];
 
 	printf("Сервер запускается...\n");
-	//Создаем и запускаем поток клиента
+	//Создаем и запускаем поток сервера с методом serverMain
 	thread serverThread([server] { server->serverMain(); });
 
 	printf("Клиенты запускаются...\n");
