@@ -1,0 +1,4 @@
+D:/CLion Programs/cmake-build-debug/CMakeFiles/CLion_Programs.dir
+D:/CLion Programs/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+D:/CLion Programs/cmake-build-debug/CMakeFiles/openmp_test_clion.dir
+D:/CLion Programs/cmake-build-debug/CMakeFiles/edit_cache.dir
