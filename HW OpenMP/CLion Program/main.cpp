@@ -143,7 +143,8 @@ void clientMain(int roomNumber, string text, Server *server) {
     sleep(rand() % 3);
 
     int letterNumber = server->enqueueRequest(&letter);//Клиент отправляет валентинку на сервер
-    printf("[CLIENT №%d] Отправил письмо %d \"%s\", жду ответа!\n", roomNumber, letterNumber, text.c_str());//Выводит информацию об этом запросе
+    printf("[CLIENT №%d] Отправил письмо %d \"%s\", жду ответа!\n", roomNumber, letterNumber,
+           text.c_str());//Выводит информацию об этом запросе
 
     //Активное ожидание, пока сервер не определил победителя поток будет ожидать
     while (!server->isResponseReady())
