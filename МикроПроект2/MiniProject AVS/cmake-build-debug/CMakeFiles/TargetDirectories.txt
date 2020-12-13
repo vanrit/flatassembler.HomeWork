@@ -1,0 +1,3 @@
+D:/MiniProject AVS/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/MiniProject AVS/cmake-build-debug/CMakeFiles/MiniProject_AVS.dir
+D:/MiniProject AVS/cmake-build-debug/CMakeFiles/rebuild_cache.dir
